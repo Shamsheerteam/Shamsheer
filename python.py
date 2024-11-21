@@ -188,5 +188,5 @@ def upload_data():
         return jsonify({"error": str(e)}), 500
 
 # Run the server
-if _name_ == '_main_':
+if __name__ == '__main__':
     app.run(debug=True)
