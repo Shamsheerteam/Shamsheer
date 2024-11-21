@@ -7,7 +7,7 @@ import firebase_admin
 from firebase_admin import credentials, firestore, storage
 from datetime import datetime
 
-app = Flask(_name_)
+app = Flask(__name__)
 
 # Initialize Firebase Admin SDK
 def initialize_firebase():
