@@ -9,24 +9,38 @@ from datetime import datetime
 import json
 import os
 from base64 import b64decode
+from dotenv import load_dotenv
 
 app = Flask(__name__)
 
 # Initialize Firebase Admin SDK
+load_dotenv()
+
 def initialize_firebase():
+    """Initialize Firebase app using Base64-decoded service account credentials."""
     try:
+        # Retrieve the Base64-encoded credentials from the environment
+        encoded_creds = os.getenv("FIREBASE_CREDENTIALS")
+        if not encoded_creds:
+            raise ValueError("Firebase credentials not found in environment variables.")
+        
+        # Decode the Base64-encoded credentials
+        decoded_creds = b64decode(encoded_creds).decode("utf-8")
+        
+        # Write the decoded credentials to a temporary file
+        temp_cred_path = "temp_firebase_creds.json"
+        with open(temp_cred_path, "w") as temp_cred_file:
+            temp_cred_file.write(decoded_creds)
+        
+        # Initialize Firebase
         if not firebase_admin._apps:
-            encoded_key = os.environ.get("FIREBASE_CREDS")
-            if not encoded_key:
-                raise Exception("Firebase credentials not set in environment.")
-            
-            decoded_key = b64decode(encoded_key).decode('utf-8')
-            service_account_key = json.loads(decoded_key)
-            
-            cred = credentials.Certificate(service_account_key)
+            cred = credentials.Certificate(temp_cred_path)
             firebase_admin.initialize_app(cred, {
-                "storageBucket": "kawach-516a2.appspot.com"
+                "storageBucket": "your-bucket-name.appspot.com"
             })
+        
+        # Clean up the temporary file
+        os.remove(temp_cred_path)
     except Exception as e:
         print(f"Error initializing Firebase: {e}")
 
