@@ -14,7 +14,6 @@ from dotenv import load_dotenv
 app = Flask(__name__)
 
 # Initialize Firebase Admin SDK
-load_dotenv()
 
 def initialize_firebase():
     """Initialize Firebase app using service account credentials."""
@@ -42,10 +41,8 @@ def fetch_excel_from_url(file_url):
     """
     try:
         # Fetch the file content from the URL
-        response = requests.get(file_url)
-        response.raise_for_status()  # Raise an HTTPError if the response is not 200
-        # Load the file content into a pandas DataFrame
-        df = pd.read_excel(BytesIO(response.content))
+        
+        df = pd.read_excel(file_url)
         return df
     except Exception as e:
         print(f"Error fetching file from URL: {e}")
