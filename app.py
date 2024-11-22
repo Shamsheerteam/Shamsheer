@@ -17,30 +17,17 @@ app = Flask(__name__)
 load_dotenv()
 
 def initialize_firebase():
-    """Initialize Firebase app using Base64-decoded service account credentials."""
+    """Initialize Firebase app using service account credentials."""
     try:
-        # Retrieve the Base64-encoded credentials from the environment
-        encoded_creds = os.getenv("FIREBASE_CREDENTIALS")
-        if not encoded_creds:
-            raise ValueError("Firebase credentials not found in environment variables.")
+        # Path to your Firebase service account key file
+        service_account_key_path =  "kawach_creds.json"
         
-        # Decode the Base64-encoded credentials
-        decoded_creds = b64decode(encoded_creds).decode("utf-8")
-        
-        # Write the decoded credentials to a temporary file
-        temp_cred_path = "temp_firebase_creds.json"
-        with open(temp_cred_path, "w") as temp_cred_file:
-            temp_cred_file.write(decoded_creds)
-        
-        # Initialize Firebase
+        # Initialize Firebase app (only do this once)
         if not firebase_admin._apps:
-            cred = credentials.Certificate(temp_cred_path)
+            cred = credentials.Certificate(service_account_key_path)
             firebase_admin.initialize_app(cred, {
-                "storageBucket": "your-bucket-name.appspot.com"
+                 "storageBucket": "kawach-516a2.firebasestorage.app"
             })
-        
-        # Clean up the temporary file
-        os.remove(temp_cred_path)
     except Exception as e:
         print(f"Error initializing Firebase: {e}")
 
