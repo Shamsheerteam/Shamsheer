@@ -197,11 +197,11 @@ def upload_data():
             return jsonify({"error": "Failed to upload data to Firestore"}), 500
         
         # Extract file path and delete the file
-        file_path_to_delete = extract_file_path(file_url)
-        if file_path_to_delete:
-            delete_file(file_path_to_delete)
-        else:
-            return jsonify({"error": "Failed to extract file path from URL"}), 400
+        #file_path_to_delete = extract_file_path(file_url)
+       # if file_path_to_delete:
+           # delete_file(file_path_to_delete)
+       # else:
+         #   return jsonify({"error": "Failed to extract file path from URL"}), 400
         
         return jsonify({"message": "Data uploaded successfully and file deleted", "document_id": doc_id}), 200
     except Exception as e:
@@ -209,4 +209,5 @@ def upload_data():
 
 # Run the server
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
