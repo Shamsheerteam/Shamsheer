@@ -6,24 +6,30 @@ from io import BytesIO
 import firebase_admin
 from firebase_admin import credentials, firestore, storage
 from datetime import datetime
+import json
+import os
+from base64 import b64decode
 
 app = Flask(__name__)
 
 # Initialize Firebase Admin SDK
 def initialize_firebase():
-    """Initialize Firebase app using service account credentials."""
     try:
-        # Path to your Firebase service account key file
-        service_account_key_path =  "kawach_creds.json"
-        
-        # Initialize Firebase app (only do this once)
         if not firebase_admin._apps:
-            cred = credentials.Certificate(service_account_key_path)
+            encoded_key = os.environ.get("FIREBASE_CREDS")
+            if not encoded_key:
+                raise Exception("Firebase credentials not set in environment.")
+            
+            decoded_key = b64decode(encoded_key).decode('utf-8')
+            service_account_key = json.loads(decoded_key)
+            
+            cred = credentials.Certificate(service_account_key)
             firebase_admin.initialize_app(cred, {
-                 "storageBucket": "kawach-516a2.firebasestorage.app"
+                "storageBucket": "kawach-516a2.appspot.com"
             })
     except Exception as e:
         print(f"Error initializing Firebase: {e}")
+
 
 # Fetch Excel file from public URL
 def fetch_excel_from_url(file_url):
