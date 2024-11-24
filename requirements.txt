@@ -4,3 +4,4 @@ firebase-admin
 requests
 python-dotenv
 gunicorn
+openpyxl
