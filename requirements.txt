@@ -1,7 +1,0 @@
-Flask
-pandas
-requests
-firebase-admin
-gunicorn
-python-dotenv
-openpyxl
