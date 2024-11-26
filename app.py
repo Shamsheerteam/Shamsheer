@@ -96,6 +96,12 @@ def upload_and_delete():
         fields = df.iloc[3:13, 1].astype(str).tolist()  # Column B, rows 4 to 10 (adjust indexing for 0-based indexing)
         values = df.iloc[3:13, 7].astype(int).tolist()  # Column H, rows 4 to 10
 
+        if values.isnull().any():
+            return jsonify({"error": "One or more required values are empty."}), 400
+
+        if (values < 0).any():
+            return jsonify({"error": "One or more required values are negative."}), 400
+            
         # Combine fields and values into a dictionary
         data = dict(zip(fields, values))
 
