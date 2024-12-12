@@ -93,15 +93,12 @@ def upload_and_delete():
         df = pd.read_excel(file_bytes)
 
         # Extract the fields and values
-        fields = df.iloc[3:100, 1].astype(str).tolist()  # Column B, rows 4 to 10 (adjust indexing for 0-based indexing)
-        values = df.iloc[3:100, 7]  # Column H, rows 4 to 10
+        df.iloc[3:100, 7] = df.iloc[3:100, 7].fillna(0)
 
-        if values.isnull().any():
-            return jsonify({"error": "One or more required values are empty."}), 400
-
-        if (values < 0).any():
-            return jsonify({"error": "One or more required values are negative."}), 400
-        values = df.iloc[3:100, 7].astype(int).tolist()   
+        # Extract fields (Column B) and values (Column H)
+        fields = df.iloc[3:100, 1].astype(str).tolist()  # Column B, rows 4 to 100
+        values = df.iloc[3:100, 7].astype(int).tolist()  # Column H, rows 4 to 100
+        
         # Combine fields and values into a dictionary
         data = dict(zip(fields, values))
 
